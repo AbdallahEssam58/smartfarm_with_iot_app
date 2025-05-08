@@ -11,11 +11,18 @@ import 'package:smartfarm_with_iot_app/home/home_screen.dart';
 import 'package:smartfarm_with_iot_app/home/tabs/home_tab.dart';
 import 'package:smartfarm_with_iot_app/provider/my_provider.dart';
 
-class SignIn extends StatelessWidget {
+class SignIn extends StatefulWidget {
   SignIn({super.key});
 
+  @override
+  State<SignIn> createState() => _SignInState();
+}
+
+class _SignInState extends State<SignIn> {
   var emailController = TextEditingController();
+
   var passwordController = TextEditingController();
+  bool isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -85,20 +92,47 @@ class SignIn extends StatelessWidget {
                     prefixIcon: const Icon(Icons.email)),
               ),
               const SizedBox(height: 10),
+              // TextField(
+              //   controller: passwordController,
+              //   keyboardType: TextInputType.text,
+              //   decoration: InputDecoration(
+              //     hintText: "Password",
+              //     border: OutlineInputBorder(
+              //         borderRadius: BorderRadius.circular(18),
+              //         borderSide: BorderSide.none),
+              //     fillColor: Colors.transparent.withOpacity(0.1),
+              //     filled: true,
+              //     prefixIcon: const Icon(Icons.remove_red_eye),
+              //   ),
+              //   obscureText: true,
+              // ),
               TextField(
                 controller: passwordController,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   hintText: "Password",
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(18),
-                      borderSide: BorderSide.none),
+                    borderRadius: BorderRadius.circular(18),
+                    borderSide: BorderSide.none,
+                  ),
                   fillColor: Colors.transparent.withOpacity(0.1),
                   filled: true,
-                  prefixIcon: const Icon(Icons.remove_red_eye),
+                  prefixIcon: IconButton(
+                    icon: Icon(
+                      isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      color: Colors.grey[800],
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        isPasswordVisible = !isPasswordVisible;
+                      });
+                    },
+                  ),
                 ),
-                obscureText: true,
+                obscureText: !isPasswordVisible,
               ),
+
+
               SizedBox(height: 10),
               Row(
                 children: [
@@ -252,19 +286,22 @@ class SignIn extends StatelessWidget {
                               ),
                             );
                           } catch (e) {
-                            showDialog(context: context, builder: (context) =>  AlertDialog(
-                              title: Text("Error"),
-                              content: Text(
-                                  " An error occurred while trying to send the link::$e"),
-                              actions: [
-                                ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text("OK"),
-                                )
-                              ],
-                            ),);
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text("Error"),
+                                content: Text(
+                                    " An error occurred while trying to send the link::$e"),
+                                actions: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("OK"),
+                                  )
+                                ],
+                              ),
+                            );
                           }
                         },
                         child: Text(
