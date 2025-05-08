@@ -19,7 +19,7 @@ class SignIn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var provider=Provider.of<MyProvider>(context);
+    var provider = Provider.of<MyProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -99,36 +99,6 @@ class SignIn extends StatelessWidget {
                 ),
                 obscureText: true,
               ),
-              // TextFormField(
-              //   decoration: InputDecoration(
-              //     fillColor: Colors.grey[200],
-              //     filled: true,
-              //     border: OutlineInputBorder(
-              //       borderRadius: BorderRadius.circular(25),
-              //     ),
-              //     labelText: "Email Address",
-              //     labelStyle: TextStyle(
-              //         fontSize: 15,
-              //         fontWeight: FontWeight.w400,
-              //         color: Colors.black),
-              //   ),
-              // ),
-              // SizedBox(height: 15),
-              // TextFormField(
-              //   obscureText: true,
-              //   decoration: InputDecoration(
-              //     fillColor: Colors.grey[200],
-              //     filled: true,
-              //     border: OutlineInputBorder(
-              //       borderRadius: BorderRadius.circular(25),
-              //     ),
-              //     labelText: "Password",
-              //     labelStyle: TextStyle(
-              //         fontSize: 15,
-              //         fontWeight: FontWeight.w400,
-              //         color: Colors.black),
-              //   ),
-              // ),
               SizedBox(height: 10),
               Row(
                 children: [
@@ -197,10 +167,11 @@ class SignIn extends StatelessWidget {
                   FirebaseFunctions.loginUser(
                       emailController.text, passwordController.text,
                       onSuccess: (label) {
-                        provider.initUser();
-                        Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName,(route)=>false,
-                            arguments: label );
-                      }, onError: (error) {
+                    provider.initUser();
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, HomeScreen.routeName, (route) => false,
+                        arguments: label);
+                  }, onError: (error) {
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
@@ -210,7 +181,8 @@ class SignIn extends StatelessWidget {
                           ElevatedButton(
                               onPressed: () {
                                 Navigator.pop(context);
-                              }, child: Text("Okay!!")),
+                              },
+                              child: Text("Okay!!")),
                         ],
                       ),
                     );
@@ -236,6 +208,76 @@ class SignIn extends StatelessWidget {
               ),
               Column(
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        onPressed: () async {
+                          final email = emailController.text.trim();
+                          if (email.isEmpty) {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text("ِAlert"),
+                                content: Text(
+                                    "Please enter your email address first."),
+                                actions: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("Good"),
+                                  )
+                                ],
+                              ),
+                            );
+                            return;
+                          }
+                          try {
+                            await FirebaseFunctions.resetPassword(email);
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text("Sent"),
+                                content: Text(
+                                    "A password reset link has been sent to $email"),
+                                actions: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("OK"),
+                                  )
+                                ],
+                              ),
+                            );
+                          } catch (e) {
+                            showDialog(context: context, builder: (context) =>  AlertDialog(
+                              title: Text("Error"),
+                              content: Text(
+                                  " An error occurred while trying to send the link::$e"),
+                              actions: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text("OK"),
+                                )
+                              ],
+                            ),);
+                          }
+                        },
+                        child: Text(
+                          "Forgot password?",
+                          style: GoogleFonts.inder(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.green,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -268,7 +310,6 @@ class SignIn extends StatelessWidget {
                   ),
                 ],
               ),
-
             ],
           ),
         ),

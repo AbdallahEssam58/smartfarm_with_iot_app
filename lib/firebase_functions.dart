@@ -33,6 +33,19 @@ class FirebaseFunctions {
     await FirebaseFirestore.instance.collection('Farms').doc(docId).delete();
   }
 
+
+  static Future<void> resetPassword(String email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      throw e.message ?? "An unknown error occurred";
+    } catch (e) {
+      throw "An error occurred: $e";
+    }
+  }
+
+
+
   static CollectionReference<UserModel> getUsersCollection() {
     return FirebaseFirestore.instance
         .collection("Users")
