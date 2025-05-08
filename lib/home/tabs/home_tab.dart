@@ -34,7 +34,7 @@ class HomeTab extends StatelessWidget {
           IconButton(
             onPressed: () {
               FirebaseAuth.instance.signOut();
-              Navigator.pushNamed(context,OnboardingScreen.routeName );
+              Navigator.pushNamed(context, OnboardingScreen.routeName);
             },
             icon: Icon(
               Icons.logout,
@@ -121,39 +121,40 @@ class HomeTab extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 12.h),
-              Wrap(
-                spacing: 15.w,
-                runSpacing: 15.h,
-                alignment: WrapAlignment.start,
-                children: [
-                  Statcard(
-                      label: "Light Intensity",
-                      imagePath: "assets/images/Light Intensity.png",
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LightIntensity()))),
-                  Statcard(
-                      label: "Humidity",
-                      imagePath: "assets/images/Humidity.png",
-                      onTap: () => Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Humidity()))),
-                  Statcard(
-                      label: "Fire Detection",
-                      imagePath: "assets/images/Fire Detection.png",
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => FireDetection()))),
-                  Statcard(
-                      label: "Temperature",
-                      imagePath: "assets/images/Temprature.png",
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Temperature()))),
-                ],
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    Statcard(
+                        label: "Light Intensity",
+                        imagePath: "assets/images/Light Intensity.png",
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LightIntensity()))),
+                    Statcard(
+                        label: "Humidity",
+                        imagePath: "assets/images/Humidity.png",
+                        onTap: () => Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Humidity()))),
+                    Statcard(
+                        label: "Fire Detection",
+                        imagePath: "assets/images/Fire Detection.png",
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => FireDetection()))),
+                    Statcard(
+                        label: "Temperature",
+                        imagePath: "assets/images/Temprature.png",
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Temperature()))),
+                  ],
+                ),
               ),
+
               // SizedBox(height: 10.h),
             ],
           ),
@@ -217,9 +218,9 @@ class Statcard extends StatelessWidget {
 
   const Statcard(
       {super.key,
-        required this.imagePath,
-        required this.label,
-        required this.onTap});
+      required this.imagePath,
+      required this.label,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -249,7 +250,7 @@ class Statcard extends StatelessWidget {
           children: [
             Image.asset(
               imagePath,
-              width: 61,
+              width: 90,
               height: 75,
               fit: BoxFit.contain,
             ),
