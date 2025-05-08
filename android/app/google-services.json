@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "993529674730",
+    "project_id": "smartfarm-with-iot-app-4b54a",
+    "storage_bucket": "smartfarm-with-iot-app-4b54a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:993529674730:android:6692de9e4a9fa98f5dd093",
+        "android_client_info": {
+          "package_name": "com.example.smartfarm_with_iot_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqZ981XEI3jT4r3GHRTr5rwywahOAFFls"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
