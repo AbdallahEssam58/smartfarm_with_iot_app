@@ -7,13 +7,23 @@ import 'package:smartfarm_with_iot_app/firebase_functions.dart';
 import 'package:smartfarm_with_iot_app/setup_farm.dart';
 import 'package:smartfarm_with_iot_app/sign_in.dart';
 
-class SignUp extends StatelessWidget {
+class SignUp extends StatefulWidget {
   SignUp({super.key});
 
+  @override
+  State<SignUp> createState() => _SignUpState();
+}
+
+class _SignUpState extends State<SignUp> {
   var firstNameController = TextEditingController();
+
   var lastNameController = TextEditingController();
+
   var emailController = TextEditingController();
+
   var passwordController = TextEditingController();
+
+  bool isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -118,18 +128,43 @@ class SignUp extends StatelessWidget {
                 obscureText: false,
               ),
               const SizedBox(height: 20),
+              // TextField(
+              //   controller: passwordController,
+              //   decoration: InputDecoration(
+              //     hintText: "Password (8+ Characters)",
+              //     border: OutlineInputBorder(
+              //         borderRadius: BorderRadius.circular(18),
+              //         borderSide: BorderSide.none),
+              //     fillColor: Colors.transparent.withOpacity(0.1),
+              //     filled: true,
+              //     prefixIcon: const Icon(Icons.remove_red_eye_sharp),
+              //   ),
+              //   obscureText: true,
+              // ),
               TextField(
                 controller: passwordController,
+                keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   hintText: "Password (8+ Characters)",
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(18),
-                      borderSide: BorderSide.none),
+                    borderRadius: BorderRadius.circular(18),
+                    borderSide: BorderSide.none,
+                  ),
                   fillColor: Colors.transparent.withOpacity(0.1),
                   filled: true,
-                  prefixIcon: const Icon(Icons.remove_red_eye_sharp),
+                  prefixIcon: IconButton(
+                    icon: Icon(
+                      isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      color: Colors.grey[800],
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        isPasswordVisible = !isPasswordVisible;
+                      });
+                    },
+                  ),
                 ),
-                obscureText: true,
+                obscureText: !isPasswordVisible,
               ),
               SizedBox(height: 10.h),
               _buildTermsAndConditions(),
