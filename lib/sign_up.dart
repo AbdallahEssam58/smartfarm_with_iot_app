@@ -16,11 +16,8 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   var firstNameController = TextEditingController();
-
   var lastNameController = TextEditingController();
-
   var emailController = TextEditingController();
-
   var passwordController = TextEditingController();
 
   bool isPasswordVisible = false;
@@ -30,167 +27,165 @@ class _SignUpState extends State<SignUp> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 20.h),
-              Center(
-                child: Image.asset(
-                  "assets/images/Logo (2).png",
-                  width: 100.w,
-                ),
-              ),
-              SizedBox(height: 20.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Welcome to",
-                    style: GoogleFonts.inder(
-                      fontSize: 22.sp,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                    ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 20.h),
+                Center(
+                  child: Image.asset(
+                    "assets/images/Logo (2).png",
+                    width: 100.w,
                   ),
-                  SizedBox(width: 7.w),
-                  Text(
-                    "Smart Farm",
-                    style: GoogleFonts.inder(
-                      fontSize: 22.sp,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.green,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10.h),
-              Text(
-                "Create an account to access Smart Farm, and start \nto set up your farm and garden.",
-                textAlign: TextAlign.center,
-                style: GoogleFonts.afacad(
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
                 ),
-              ),
-              SizedBox(height: 15.h),
-
-              // _buildTextField("First Name"),
-              // _buildTextField("Last Name"),
-              // _buildTextField("Email Address"),
-              // _buildTextField("Password (8+ Characters)", isPassword: true),
-              TextField(
-                controller: firstNameController,
-                keyboardType: TextInputType.name,
-                decoration: InputDecoration(
-                    hintText: "First Name",
+                SizedBox(height: 20.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Welcome to",
+                      style: GoogleFonts.inder(
+                        fontSize: 22.sp,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(width: 7.w),
+                    Text(
+                      "Smart Farm",
+                      style: GoogleFonts.inder(
+                        fontSize: 22.sp,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10.h),
+                Text(
+                  "Create an account to access Smart Farm, and start \nto set up your farm and garden.",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.afacad(
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 15.h),
+        
+                // _buildTextField("First Name"),
+                // _buildTextField("Last Name"),
+                // _buildTextField("Email Address"),
+                // _buildTextField("Password (8+ Characters)", isPassword: true),
+                TextField(
+                  controller: firstNameController,
+                  keyboardType: TextInputType.name,
+                  decoration: InputDecoration(
+                      hintText: "First Name",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(18),
+                          borderSide: BorderSide.none),
+                      fillColor: Colors.transparent.withOpacity(0.1),
+                      filled: true,
+                      prefixIcon: const Icon(Icons.person)),
+                ),
+                const SizedBox(height: 20),
+                TextField(
+                  controller: lastNameController,
+                  decoration: InputDecoration(
+                      hintText: "Last Name",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(18),
+                          borderSide: BorderSide.none),
+                      fillColor: Colors.transparent.withOpacity(0.1),
+                      filled: true,
+                      prefixIcon: const Icon(Icons.person)),
+                ),
+                const SizedBox(height: 20),
+                TextField(
+                  controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    hintText: "Email Address",
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(18),
                         borderSide: BorderSide.none),
                     fillColor: Colors.transparent.withOpacity(0.1),
                     filled: true,
-                    prefixIcon: const Icon(Icons.person)),
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: lastNameController,
-                decoration: InputDecoration(
-                    hintText: "Last Name",
+                    prefixIcon: const Icon(Icons.email),
+                  ),
+                  obscureText: false,
+                ),
+                const SizedBox(height: 20),
+                // TextField(
+                //   controller: passwordController,
+                //   decoration: InputDecoration(
+                //     hintText: "Password (8+ Characters)",
+                //     border: OutlineInputBorder(
+                //         borderRadius: BorderRadius.circular(18),
+                //         borderSide: BorderSide.none),
+                //     fillColor: Colors.transparent.withOpacity(0.1),
+                //     filled: true,
+                //     prefixIcon: const Icon(Icons.remove_red_eye_sharp),
+                //   ),
+                //   obscureText: true,
+                // ),
+                TextField(
+                  controller: passwordController,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                    hintText: "Password (8+ Characters)",
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18),
-                        borderSide: BorderSide.none),
-                    fillColor: Colors.transparent.withOpacity(0.1),
-                    filled: true,
-                    prefixIcon: const Icon(Icons.person)),
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  hintText: "Email Address",
-                  border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18),
-                      borderSide: BorderSide.none),
-                  fillColor: Colors.transparent.withOpacity(0.1),
-                  filled: true,
-                  prefixIcon: const Icon(Icons.email),
-                ),
-                obscureText: false,
-              ),
-              const SizedBox(height: 20),
-              // TextField(
-              //   controller: passwordController,
-              //   decoration: InputDecoration(
-              //     hintText: "Password (8+ Characters)",
-              //     border: OutlineInputBorder(
-              //         borderRadius: BorderRadius.circular(18),
-              //         borderSide: BorderSide.none),
-              //     fillColor: Colors.transparent.withOpacity(0.1),
-              //     filled: true,
-              //     prefixIcon: const Icon(Icons.remove_red_eye_sharp),
-              //   ),
-              //   obscureText: true,
-              // ),
-              TextField(
-                controller: passwordController,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  hintText: "Password (8+ Characters)",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(18),
-                    borderSide: BorderSide.none,
-                  ),
-                  fillColor: Colors.transparent.withOpacity(0.1),
-                  filled: true,
-                  prefixIcon: IconButton(
-                    icon: Icon(
-                      isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                      color: Colors.grey[800],
+                      borderSide: BorderSide.none,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        isPasswordVisible = !isPasswordVisible;
-                      });
-                    },
+                    fillColor: Colors.transparent.withOpacity(0.1),
+                    filled: true,
+                    prefixIcon: IconButton(
+                      icon: Icon(
+                        isPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Colors.grey[800],
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          isPasswordVisible = !isPasswordVisible;
+                        });
+                      },
+                    ),
                   ),
+                  obscureText: !isPasswordVisible,
                 ),
-                obscureText: !isPasswordVisible,
-              ),
-              SizedBox(height: 10.h),
-              _buildTermsAndConditions(),
-
-              SizedBox(height: 10.h),
-              _buildSignupButton(context),
-
-              SizedBox(height: 10.h),
-              _buildLogin(context),
-
-              SizedBox(height: 20.h),
-              // Text(
-              //   "or",
-              //   style: GoogleFonts.inder(
-              //     fontSize: 18.sp,
-              //     fontWeight: FontWeight.w400,
-              //     color: Colors.black,
-              //   ),
-              // ),
-              // SizedBox(height: 20.h),
-
-              // SignInButton(
-              //   Buttons.Google,
-              //   onPressed: () {},
-              // ),
-            ],
+                SizedBox(height: 10.h),
+                _buildTermsAndConditions(),
+        
+                SizedBox(height: 10.h),
+                _buildSignupButton(context),
+        
+                SizedBox(height: 10.h),
+                _buildLogin(context),
+        
+                SizedBox(height: 20.h),
+                // Text(
+                //   "or",
+                //   style: GoogleFonts.inder(
+                //     fontSize: 18.sp,
+                //     fontWeight: FontWeight.w400,
+                //     color: Colors.black,
+                //   ),
+                // ),
+                // SizedBox(height: 20.h),
+        
+                // SignInButton(
+                //   Buttons.Google,
+                //   onPressed: () {},
+                // ),
+              ],
+            ),
           ),
         ),
       ),
@@ -265,18 +260,25 @@ class _SignUpState extends State<SignUp> {
           FirebaseFunctions.createAccountAuth(
               emailController.text, passwordController.text,
               firstName: firstNameController.text,
-              lastName: lastNameController.text,
-              onSuccess: () {
-                Navigator.pushNamed(context, SetUpFarmScreen.routeName);
-              }, onError: (error) {
+              lastName: lastNameController.text, onSuccess: () {
+            Navigator.pushNamed(context, SetUpFarmScreen.routeName);
+          }, onError: (error) {
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
                 title: Text("Error"),
                 content: Text(error),
                 actions: [
-                  ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("Cancel")),
-                  ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("Ok")),
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text("Cancel")),
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text("Ok")),
                 ],
               ),
             );
