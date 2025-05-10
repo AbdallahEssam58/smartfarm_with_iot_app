@@ -231,30 +231,21 @@ class Statcard extends StatelessWidget {
         width: 90,
         margin: EdgeInsets.only(right: 10, left: 10),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Color(0xFFF4F4F4),
           borderRadius: BorderRadius.only(
             topRight: Radius.circular(10),
             topLeft: Radius.circular(10),
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
-              spreadRadius: 5,
-              blurRadius: 5,
-              offset: const Offset(0, 3),
-            ),
-          ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
               imagePath,
-              width: 90,
+              width:90,
               height: 75,
               fit: BoxFit.contain,
             ),
-            //  Spacer(flex: 23,),
             Container(
               width: double.infinity,
               padding: EdgeInsets.symmetric(vertical: 8),
