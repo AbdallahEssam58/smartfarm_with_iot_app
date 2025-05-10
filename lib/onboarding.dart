@@ -24,17 +24,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     {
       'image': 'assets/images/greenhouse.png',
       'title': 'Optimize water usage\n and reduce waste\n through smart irrigation.',
-      'subtitle': 'Embrace Sustainable Practices to Conserve\n Resources and Improve Farm Efficiency.'
+      'subtitle': 'Embrace Sustainable \n Practices to Conserve Resources and Improve Farm Efficiency.'
     },
     {
       'image': 'assets/images/Farming.png',
       'title': 'Get instant alerts on soil\n health and weather\n conditions.',
-      'subtitle': 'Stay Informed with Timely Notifications to\n Safeguard Your Crops and Enhance Yield.'
+      'subtitle': 'Stay Informed with Timely Notifications \n to Safeguard Your Crops and Enhance Yield.'
     },
     {
       'image': 'assets/images/Sprinklins.png',
       'title': 'Monitor your crops in\n real-time with AI-driven\n insights.',
-      'subtitle': 'Leverage Advanced Technology to Enhance\n Decision-Making and Boost Crop Productivity.'
+      'subtitle': 'Leverage Advanced Technology to \n Enhance Decision-Making and Boost Crop Productivity.'
     },
   ];
 
