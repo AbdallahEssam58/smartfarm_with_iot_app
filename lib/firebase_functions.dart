@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import 'package:smartfarm_with_iot_app/provider/my_provider.dart';
 
 import 'models/farm_model.dart';
 import 'models/user_model.dart';
@@ -87,13 +90,14 @@ class FirebaseFunctions {
   }
 
   static createAccountAuth(String emailAddress, String password,
-      {required Function onSuccess,
+      {required BuildContext context,
+        required Function onSuccess,
         required Function onError,
         required String firstName,
         required String lastName}) async {
     try {
-      final credential =
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+
         email: emailAddress,
         password: password,
       );
@@ -103,7 +107,8 @@ class FirebaseFunctions {
           email: emailAddress,
           firstName: firstName,
           lastName: lastName);
-      addUser(userModel);
+    await  addUser(userModel);
+      await Provider.of<MyProvider>(context, listen: false).initUser();
       onSuccess();
     } on FirebaseAuthException catch (e) {
       onError(e.message);
