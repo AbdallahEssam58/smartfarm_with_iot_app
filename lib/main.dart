@@ -30,6 +30,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var pro=Provider.of<MyProvider>(context);
+
+    // ✅ تحميل بيانات المستخدم بعد تسجيل الدخول
+    if (pro.firebaseUser != null && pro.userModel == null) {
+      pro.initUser();
+    }
     return ScreenUtilInit(
       designSize: const Size(360, 690),
       minTextAdapt: true,
