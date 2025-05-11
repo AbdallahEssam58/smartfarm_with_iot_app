@@ -29,12 +29,6 @@ class _SignInState extends State<SignIn> {
     var provider = Provider.of<MyProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black),
-      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -337,7 +331,7 @@ class _SignInState extends State<SignIn> {
                         child: Text(
                           "Create account",
                           style: GoogleFonts.inder(
-                            fontSize: 18.sp,
+                            fontSize: 15.sp,
                             fontWeight: FontWeight.w400,
                             color: Colors.green,
                           ),
