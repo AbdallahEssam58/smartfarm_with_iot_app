@@ -18,8 +18,8 @@ class PersonalTab extends StatelessWidget {
           : LayoutBuilder(
               builder: (context, constraints) {
                 return SingleChildScrollView(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
+                   padding:
+                       const EdgeInsets.symmetric(horizontal: 19, vertical: 30),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
