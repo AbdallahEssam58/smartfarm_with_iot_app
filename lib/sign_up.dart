@@ -258,6 +258,7 @@ class _SignUpState extends State<SignUp> {
       child: ElevatedButton(
         onPressed: () {
           FirebaseFunctions.createAccountAuth(
+            context: context,
               emailController.text, passwordController.text,
               firstName: firstNameController.text,
               lastName: lastNameController.text, onSuccess: () {
