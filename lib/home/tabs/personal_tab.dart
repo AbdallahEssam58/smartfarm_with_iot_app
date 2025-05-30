@@ -59,7 +59,7 @@ class PersonalTab extends StatelessWidget {
                               const SizedBox(height: 4),
                               Text(
                                 user.email,
-                                style: const TextStyle(fontSize: 18),
+                                style: const TextStyle(fontSize: 14),
                               ),
                             ],
                           ),
