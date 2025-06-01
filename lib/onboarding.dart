@@ -53,7 +53,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   Expanded(
                     child: Image.asset(
                       slide['image']!,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.fitWidth,
                       width: double.infinity,
                     ),
                   ),
