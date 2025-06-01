@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     var pro=Provider.of<MyProvider>(context);
 
-    // ✅ تحميل بيانات المستخدم بعد تسجيل الدخول
+
     if (pro.firebaseUser != null && pro.userModel == null) {
       pro.initUser();
     }
