@@ -52,14 +52,135 @@ class FireDetection extends StatelessWidget {
                   color: Color(0xFFF6F6F6),
                   borderRadius: BorderRadius.circular(25),
                 ),
-                child: Center(
-                  child: Text(
-                    "Fire Status Info Placeholder",
-                    style: GoogleFonts.inder(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black54,
-                    ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            "Fire Instructions",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Divider(
+                        color: Color(0xFFD6D6D6),
+                        thickness: 3,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "1.  Stay Calm",
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            ". Do not panic. Quick, calm actions are essential for \n  safety.",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "2. Do Not Use Water on Electrical Fires",
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            ". If the fire is electrical, using water can be dangerous.\n  Use a fire extinguisher rated for electrical fires\n  (Class C) or a dry sand bucket.",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "3. Close Doors",
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            ". If the fire is electrical, using water can be dangerous.\n  Use a fire extinguisher rated for electrical fires\n  (Class C) or a dry sand bucket.",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "4. Use Fire Extinguishers if Safe",
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            ".  Only use a fire extinguisher if the fire is small and\n   you know how to operate it safely. Aim at the base\n   of the fire. ",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -70,10 +191,6 @@ class FireDetection extends StatelessWidget {
     );
   }
 }
-
-
-
-
 
 // import 'package:flutter/material.dart';
 // import 'package:google_fonts/google_fonts.dart';
