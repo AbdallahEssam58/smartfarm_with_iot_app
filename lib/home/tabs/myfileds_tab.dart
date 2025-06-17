@@ -93,7 +93,6 @@ class MyfiledsTab extends StatelessWidget {
               itemCount: fields.length+1,
               itemBuilder: (context, index) {
 
-
                 if (index < fields.length) {
                   return FieldCard(
                     name: fields[index]['name']!,
@@ -134,7 +133,7 @@ class FieldCard extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 image: DecorationImage(
-                  image: AssetImage("assets/images/Fild.png"),
+                  image: AssetImage("assets/images/Lettuce.png"),
                   fit: BoxFit.cover,
                 ),
               ),

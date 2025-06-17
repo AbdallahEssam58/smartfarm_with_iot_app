@@ -6,7 +6,8 @@ import 'package:smartfarm_with_iot_app/home/tabs/personal_tab.dart';
 import 'package:smartfarm_with_iot_app/home/tabs/statistics_tab.dart';
 
 class HomeScreen extends StatefulWidget {
-  static const String routeName="HomeScreen";
+  static const String routeName = "HomeScreen";
+
   HomeScreen({super.key});
 
   @override
@@ -20,7 +21,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     // String label=ModalRoute.of(context)?.settings as String;
     return Scaffold(
-
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Color(0xFFF2F3F2),
         selectedItemColor: Color(0xFF7BBC5C),
@@ -64,34 +64,6 @@ class _HomeScreenState extends State<HomeScreen> {
     //AiTab(),
   ];
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // Scaffold(
 // backgroundColor: Colors.white,

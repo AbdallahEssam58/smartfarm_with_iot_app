@@ -183,7 +183,7 @@ class Fildcard extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               image: DecorationImage(
-                image: AssetImage("assets/images/Fild.png"),
+                image: AssetImage("assets/images/Lettuce.png"),
                 fit: BoxFit.cover,
               ),
             ),

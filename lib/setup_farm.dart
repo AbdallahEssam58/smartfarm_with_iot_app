@@ -148,7 +148,7 @@ class _SetUpFarmScreenState extends State<SetUpFarmScreen> {
               DropdownButtonFormField<String>(
                 value: selectedCrop,
                 onChanged: (val) => setState(() => selectedCrop = val),
-                items: ['Tomatoes', 'Potatoes']
+                items: ['Cabbage', 'Potatoes']
                     .map((crop) => DropdownMenuItem(
                   value: crop,
                   child: Text(crop),
