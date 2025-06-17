@@ -229,32 +229,162 @@
 //     );
 //   }
 // }
+//=====================================================//
+// import 'package:flutter/material.dart';
+// import 'package:google_fonts/google_fonts.dart';
+// import 'package:smartfarm_with_iot_app/mqtt_service.dart';
+//
+//
+// class LightIntensity extends StatefulWidget {
+//   const LightIntensity({super.key});
+//
+//   @override
+//   State<LightIntensity> createState() => _LightIntensityState();
+// }
+//
+// class _LightIntensityState extends State<LightIntensity> {
+//   String lightValue = '--';
+//   String lightStatus = '--';
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//
+//
+//    MQTTService().setOnMessage((data) {
+//       if (data['sensor'] == 'light') {
+//         setState(() {
+//           lightValue = data['value'].toString();
+//           lightStatus = data['status'];
+//         });
+//       }
+//     });
+//   }
+//
+//   Color getStatusColor(String status) {
+//     switch (status.toLowerCase()) {
+//       case 'too dark':
+//         return Colors.orange;
+//       case 'too bright':
+//         return Colors.red;
+//       case 'suitable':
+//       case 'good':
+//         return Color(0xFF1EB624);
+//       default:
+//         return Colors.grey;
+//     }
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     double screenWidth = MediaQuery.of(context).size.width;
+//
+//     return Scaffold(
+//       backgroundColor: Colors.white,
+//       appBar: AppBar(
+//         backgroundColor: Colors.white,
+//         elevation: 0,
+//         title: Text(
+//           "Light Intensity",
+//           style: GoogleFonts.inder(
+//             fontSize: 18,
+//             fontWeight: FontWeight.w600,
+//             color: Colors.black,
+//           ),
+//         ),
+//         iconTheme: const IconThemeData(color: Colors.black),
+//       ),
+//       body: SafeArea(
+//         child: SingleChildScrollView(
+//           padding: const EdgeInsets.all(12),
+//           child: Column(
+//             children: [
+//               Container(
+//                 height: 50,
+//                 width: double.infinity,
+//                 padding: const EdgeInsets.symmetric(horizontal: 12),
+//                 decoration: BoxDecoration(
+//                   color: const Color(0xFFC0F0C2),
+//                   borderRadius: BorderRadius.circular(25),
+//                 ),
+//                 child: Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                   children: [
+//                     Row(
+//                       children: [
+//                         Image.asset(
+//                           "assets/images/sun.png",
+//                           width: 35,
+//                           height: 35,
+//                         ),
+//                         const SizedBox(width: 10),
+//                         Text(
+//                           "$lightValue LUX",
+//                           style: GoogleFonts.inder(
+//                             fontSize: 15,
+//                             fontWeight: FontWeight.bold,
+//                             color: Colors.black,
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                     Text(
+//                       lightStatus,
+//                       style: GoogleFonts.inder(
+//                         fontSize: 15,
+//                         fontWeight: FontWeight.bold,
+//                         color: getStatusColor(lightStatus),
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//               const SizedBox(height: 12),
+//
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+//===============================================================//
+
+
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smartfarm_with_iot_app/mqtt_service.dart';
+
+import '../../mqtt_service.dart';
 
 
 class LightIntensity extends StatefulWidget {
   const LightIntensity({super.key});
 
   @override
-  State<LightIntensity> createState() => _LightIntensityState();
+  State<LightIntensity> createState() => _LightIntensityPageState();
 }
 
-class _LightIntensityState extends State<LightIntensity> {
-  String lightValue = '--';
-  String lightStatus = '--';
+class _LightIntensityPageState extends State<LightIntensity> {
+  String tempValue = '--';
+  String tempStatus = '--';
+  List<String> adviceList = [];
 
   @override
   void initState() {
     super.initState();
-
-
-   MQTTService().setOnMessage((data) {
-      if (data['sensor'] == 'light') {
+    MQTTService().setOnMessage((data) async {
+      if (data['sensor'] == 'LightIntensity') {
         setState(() {
-          lightValue = data['value'].toString();
-          lightStatus = data['status'];
+          tempValue = "${data['value']}°C";
+          tempStatus = data['status'];
+        });
+        final doc = await FirebaseFirestore.instance
+            .collection("instructions")
+            .doc(tempStatus)
+            .get();
+        setState(() {
+          adviceList = List<String>.from(doc.data()?['messages'] ?? []);
         });
       }
     });
@@ -262,91 +392,93 @@ class _LightIntensityState extends State<LightIntensity> {
 
   Color getStatusColor(String status) {
     switch (status.toLowerCase()) {
-      case 'too dark':
-        return Colors.orange;
-      case 'too bright':
+      case 'too hot':
         return Colors.red;
+      case 'too low':
+        return Colors.orange;
       case 'suitable':
       case 'good':
-        return Color(0xFF1EB624);
+        return Colors.green;
       default:
         return Colors.grey;
     }
   }
 
-  @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
+        title: Text("LightIntensity", style: GoogleFonts.inder(color: Colors.black)),
         backgroundColor: Colors.white,
-        elevation: 0,
-        title: Text(
-          "Light Intensity",
-          style: GoogleFonts.inder(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: Colors.black,
-          ),
-        ),
         iconTheme: const IconThemeData(color: Colors.black),
+        elevation: 0,
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            children: [
-              Container(
-                height: 50,
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFC0F0C2),
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Image.asset(
-                          "assets/images/sun.png",
-                          width: 35,
-                          height: 35,
-                        ),
-                        const SizedBox(width: 10),
-                        Text(
-                          "$lightValue LUX",
-                          style: GoogleFonts.inder(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      lightStatus,
-                      style: GoogleFonts.inder(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: getStatusColor(lightStatus),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 12),
-
-            ],
-          ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader("assets/images/Light Intensity.png", tempValue, tempStatus),
+            const SizedBox(height: 16),
+            _buildAdviceList()
+          ],
         ),
       ),
     );
   }
+
+  Widget _buildHeader(String image, String value, String status) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFC0F0C2),
+        borderRadius: BorderRadius.circular(25),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Image.asset(image, width: 35),
+              const SizedBox(width: 10),
+              Text(value, style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          Text(status,
+              style: GoogleFonts.inder(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: getStatusColor(status))),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAdviceList() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Recommendations:",
+            style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        ...adviceList.map((advice) => Padding(
+          padding: const EdgeInsets.only(bottom: 6),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(Icons.check_circle, color: Colors.green),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(advice,
+                    style: GoogleFonts.inder(fontSize: 14, fontWeight: FontWeight.w500)),
+              ),
+            ],
+          ),
+        ))
+      ],
+    );
+  }
 }
+
 
 
 

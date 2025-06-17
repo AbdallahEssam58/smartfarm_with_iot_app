@@ -190,8 +190,243 @@
 //     );
 //   }
 // }
+//=================================================================//
+// import 'package:flutter/material.dart';
+// import 'package:google_fonts/google_fonts.dart';
+// import '../../mqtt_service.dart';
+//
+//
+// class Humidity extends StatefulWidget {
+//   const Humidity({super.key});
+//
+//   @override
+//   State<Humidity> createState() => _HumidityPageState();
+// }
+//
+// class _HumidityPageState extends State<Humidity> {
+//   String humidityValue = '--';
+//   String humidityStatus = '--';
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//
+//
+//     MQTTService().setOnMessage((data) {
+//       if (data['sensor'] == 'humidity') {
+//         setState(() {
+//           humidityValue = "${data['value']}%";
+//           humidityStatus = data['status'];
+//         });
+//       }
+//     });
+//   }
+//
+//   Color getStatusColor(String status) {
+//     switch (status.toLowerCase()) {
+//       case 'too low':
+//         return Colors.orange;
+//       case 'too high':
+//         return Colors.red;
+//       case 'suitable':
+//       case 'good':
+//         return const Color(0xFF1EB624);
+//       default:
+//         return Colors.grey;
+//     }
+//   }
+//
+//   Widget buildHumidityContainer({
+//     required Color backgroundColor,
+//     required String title,
+//     required List<String> signs,
+//     required List<List<String>> actions,
+//   }) {
+//     return Container(
+//       padding: const EdgeInsets.all(16),
+//       margin: const EdgeInsets.only(bottom: 12),
+//       decoration: BoxDecoration(
+//         color: backgroundColor,
+//         borderRadius: BorderRadius.circular(20),
+//       ),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Text(
+//             title,
+//             style: GoogleFonts.inder(
+//               fontSize: 17,
+//               fontWeight: FontWeight.w600,
+//               color: Colors.black,
+//             ),
+//           ),
+//           const SizedBox(height: 10),
+//           Text("Signs:",
+//               style: GoogleFonts.inder(
+//                   fontSize: 16,
+//                   fontWeight: FontWeight.bold,
+//                   color: Colors.black)),
+//           const SizedBox(height: 6),
+//           ...signs.map((sign) => Padding(
+//             padding: const EdgeInsets.only(left: 8.0, bottom: 4),
+//             child: Row(
+//               children: [
+//                 const Icon(Icons.brightness_1, size: 8, color: Colors.black54),
+//                 const SizedBox(width: 8),
+//                 Expanded(
+//                   child: Text(
+//                     sign,
+//                     style: GoogleFonts.inder(
+//                       fontSize: 15,
+//                       fontWeight: FontWeight.w500,
+//                       color: Colors.black,
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           )),
+//           const SizedBox(height: 10),
+//           Text("Immediate Actions:",
+//               style: GoogleFonts.inder(
+//                   fontSize: 16,
+//                   fontWeight: FontWeight.bold,
+//                   color: Colors.black)),
+//           const SizedBox(height: 6),
+//           ...actions.map((pair) => Padding(
+//             padding: const EdgeInsets.only(bottom: 10),
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Row(
+//                   children: [
+//                     const Icon(Icons.check_circle, color: Colors.green),
+//                     const SizedBox(width: 6),
+//                     Expanded(
+//                       child: Text(
+//                         pair[0],
+//                         style: GoogleFonts.inder(
+//                           fontSize: 15,
+//                           fontWeight: FontWeight.w600,
+//                           color: Colors.black,
+//                         ),
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//                 Padding(
+//                   padding: const EdgeInsets.only(left: 28.0, top: 2),
+//                   child: Text(
+//                     pair[1],
+//                     style: GoogleFonts.inder(
+//                       fontSize: 14,
+//                       fontWeight: FontWeight.w400,
+//                       color: Colors.black87,
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           )),
+//         ],
+//       ),
+//     );
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text("Humidity", style: GoogleFonts.inder(color: Colors.black)),
+//         backgroundColor: Colors.white,
+//         elevation: 0,
+//         iconTheme: const IconThemeData(color: Colors.black),
+//       ),
+//       backgroundColor: Colors.white,
+//       body: Padding(
+//         padding: const EdgeInsets.all(12),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Container(
+//               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+//               decoration: BoxDecoration(
+//                 color: const Color(0xFFE0F7FA),
+//                 borderRadius: BorderRadius.circular(25),
+//               ),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 children: [
+//                   Row(
+//                     children: [
+//                       Image.asset("assets/images/Humidity.png", width: 30),
+//                       const SizedBox(width: 10),
+//                       Text(
+//                         humidityValue,
+//                         style: GoogleFonts.inder(
+//                           fontSize: 16,
+//                           fontWeight: FontWeight.bold,
+//                           color: Colors.black,
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                   Text(
+//                     humidityStatus,
+//                     style: GoogleFonts.inder(
+//                       fontSize: 15,
+//                       fontWeight: FontWeight.bold,
+//                       color: getStatusColor(humidityStatus),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             const SizedBox(height: 16),
+//
+//
+//             if (humidityStatus.toLowerCase() == 'too low') ...[
+//               buildHumidityContainer(
+//                 backgroundColor: const Color(0xFFFFF3E0),
+//                 title: "If Humidity is Too Low (< 30%)",
+//                 signs: [
+//                   "Leaves appear dry and crispy",
+//                   "Soil dries quickly",
+//                   "Wilting during midday",
+//                 ],
+//                 actions: [
+//                   ["Increase Irrigation", "Water more frequently but avoid overwatering."],
+//                   ["Use Mulch", "To retain soil moisture."],
+//                   ["Mist Plants", "Helps raise local humidity."],
+//                 ],
+//               )
+//             ] else if (humidityStatus.toLowerCase() == 'too high') ...[
+//               buildHumidityContainer(
+//                 backgroundColor: const Color(0xFFFFEBEE),
+//                 title: "If Humidity is Too High (> 80%)",
+//                 signs: [
+//                   "Leaf yellowing or mold",
+//                   "Fungal growth on stems or soil",
+//                 ],
+//                 actions: [
+//                   ["Improve Air Flow", "Use fans or ventilate the area."],
+//                   ["Avoid Overwatering", "Ensure proper drainage."],
+//                   ["Thin Crowded Plants", "To improve space and air movement."],
+//                 ],
+//               )
+//             ],
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+//=================================================================//
+
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import '../../mqtt_service.dart';
 
 
@@ -203,19 +438,25 @@ class Humidity extends StatefulWidget {
 }
 
 class _HumidityPageState extends State<Humidity> {
-  String humidityValue = '--';
-  String humidityStatus = '--';
+  String tempValue = '--';
+  String tempStatus = '--';
+  List<String> adviceList = [];
 
   @override
   void initState() {
     super.initState();
-
-
-    MQTTService().setOnMessage((data) {
-      if (data['sensor'] == 'humidity') {
+    MQTTService().setOnMessage((data) async {
+      if (data['sensor'] == 'Humidity') {
         setState(() {
-          humidityValue = "${data['value']}%";
-          humidityStatus = data['status'];
+          tempValue = "${data['value']}°C";
+          tempStatus = data['status'];
+        });
+        final doc = await FirebaseFirestore.instance
+            .collection("instructions")
+            .doc(tempStatus)
+            .get();
+        setState(() {
+          adviceList = List<String>.from(doc.data()?['messages'] ?? []);
         });
       }
     });
@@ -223,200 +464,89 @@ class _HumidityPageState extends State<Humidity> {
 
   Color getStatusColor(String status) {
     switch (status.toLowerCase()) {
+      case 'too hot':
+        return Colors.red;
       case 'too low':
         return Colors.orange;
-      case 'too high':
-        return Colors.red;
       case 'suitable':
       case 'good':
-        return const Color(0xFF1EB624);
+        return Colors.green;
       default:
         return Colors.grey;
     }
   }
 
-  Widget buildHumidityContainer({
-    required Color backgroundColor,
-    required String title,
-    required List<String> signs,
-    required List<List<String>> actions,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: GoogleFonts.inder(
-              fontSize: 17,
-              fontWeight: FontWeight.w600,
-              color: Colors.black,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text("Signs:",
-              style: GoogleFonts.inder(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black)),
-          const SizedBox(height: 6),
-          ...signs.map((sign) => Padding(
-            padding: const EdgeInsets.only(left: 8.0, bottom: 4),
-            child: Row(
-              children: [
-                const Icon(Icons.brightness_1, size: 8, color: Colors.black54),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    sign,
-                    style: GoogleFonts.inder(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )),
-          const SizedBox(height: 10),
-          Text("Immediate Actions:",
-              style: GoogleFonts.inder(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black)),
-          const SizedBox(height: 6),
-          ...actions.map((pair) => Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.check_circle, color: Colors.green),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text(
-                        pair[0],
-                        style: GoogleFonts.inder(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 28.0, top: 2),
-                  child: Text(
-                    pair[1],
-                    style: GoogleFonts.inder(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black87,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )),
-        ],
-      ),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Humidity", style: GoogleFonts.inder(color: Colors.black)),
         backgroundColor: Colors.white,
-        elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
+        elevation: 0,
       ),
-      backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-              decoration: BoxDecoration(
-                color: const Color(0xFFE0F7FA),
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Image.asset("assets/images/Humidity.png", width: 30),
-                      const SizedBox(width: 10),
-                      Text(
-                        humidityValue,
-                        style: GoogleFonts.inder(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    humidityStatus,
-                    style: GoogleFonts.inder(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: getStatusColor(humidityStatus),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _buildHeader("assets/images/Humidity.png", tempValue, tempStatus),
             const SizedBox(height: 16),
-
-
-            if (humidityStatus.toLowerCase() == 'too low') ...[
-              buildHumidityContainer(
-                backgroundColor: const Color(0xFFFFF3E0),
-                title: "If Humidity is Too Low (< 30%)",
-                signs: [
-                  "Leaves appear dry and crispy",
-                  "Soil dries quickly",
-                  "Wilting during midday",
-                ],
-                actions: [
-                  ["Increase Irrigation", "Water more frequently but avoid overwatering."],
-                  ["Use Mulch", "To retain soil moisture."],
-                  ["Mist Plants", "Helps raise local humidity."],
-                ],
-              )
-            ] else if (humidityStatus.toLowerCase() == 'too high') ...[
-              buildHumidityContainer(
-                backgroundColor: const Color(0xFFFFEBEE),
-                title: "If Humidity is Too High (> 80%)",
-                signs: [
-                  "Leaf yellowing or mold",
-                  "Fungal growth on stems or soil",
-                ],
-                actions: [
-                  ["Improve Air Flow", "Use fans or ventilate the area."],
-                  ["Avoid Overwatering", "Ensure proper drainage."],
-                  ["Thin Crowded Plants", "To improve space and air movement."],
-                ],
-              )
-            ],
+            _buildAdviceList()
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildHeader(String image, String value, String status) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFE2E2),
+        borderRadius: BorderRadius.circular(25),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Image.asset(image, width: 35),
+              const SizedBox(width: 10),
+              Text(value, style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          Text(status,
+              style: GoogleFonts.inder(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: getStatusColor(status))),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAdviceList() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Recommendations:",
+            style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        ...adviceList.map((advice) => Padding(
+          padding: const EdgeInsets.only(bottom: 6),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(Icons.check_circle, color: Colors.green),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(advice,
+                    style: GoogleFonts.inder(fontSize: 14, fontWeight: FontWeight.w500)),
+              ),
+            ],
+          ),
+        ))
+      ],
     );
   }
 }
