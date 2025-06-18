@@ -22,7 +22,7 @@ class CreateAnAccountScreen extends StatelessWidget {
             children: [
               SizedBox(
                 width: double.infinity,
-                height: 454.h,
+                height: 350.h,
                 child: Image.asset(
                   "assets/images/Farm2.png",
                   fit: BoxFit.fill,
