@@ -351,10 +351,137 @@
 //===============================================================//
 
 
+// import 'package:flutter/material.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:google_fonts/google_fonts.dart';
+//
+// import '../../mqtt_service.dart';
+//
+//
+// class LightIntensity extends StatefulWidget {
+//   const LightIntensity({super.key});
+//
+//   @override
+//   State<LightIntensity> createState() => _LightIntensityPageState();
+// }
+//
+// class _LightIntensityPageState extends State<LightIntensity> {
+//   String tempValue = '--';
+//   String tempStatus = '--';
+//   List<String> adviceList = [];
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     MQTTService().setOnMessage((data) async {
+//       if (data['sensor'] == 'LightIntensity') {
+//         setState(() {
+//           tempValue = "${data['value']}°C";
+//           tempStatus = data['status'];
+//         });
+//         final doc = await FirebaseFirestore.instance
+//             .collection("instructions")
+//             .doc(tempStatus)
+//             .get();
+//         setState(() {
+//           adviceList = List<String>.from(doc.data()?['messages'] ?? []);
+//         });
+//       }
+//     });
+//   }
+//
+//   Color getStatusColor(String status) {
+//     switch (status.toLowerCase()) {
+//       case 'too hot':
+//         return Colors.red;
+//       case 'too low':
+//         return Colors.orange;
+//       case 'suitable':
+//       case 'good':
+//         return Colors.green;
+//       default:
+//         return Colors.grey;
+//     }
+//   }
+//
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text("LightIntensity", style: GoogleFonts.inder(color: Colors.black)),
+//         backgroundColor: Colors.white,
+//         iconTheme: const IconThemeData(color: Colors.black),
+//         elevation: 0,
+//       ),
+//       body: Padding(
+//         padding: const EdgeInsets.all(16),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             _buildHeader("assets/images/Light Intensity.png", tempValue, tempStatus),
+//             const SizedBox(height: 16),
+//             _buildAdviceList()
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+//
+//   Widget _buildHeader(String image, String value, String status) {
+//     return Container(
+//       padding: const EdgeInsets.all(12),
+//       decoration: BoxDecoration(
+//         color: const Color(0xFFC0F0C2),
+//         borderRadius: BorderRadius.circular(25),
+//       ),
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//         children: [
+//           Row(
+//             children: [
+//               Image.asset(image, width: 35),
+//               const SizedBox(width: 10),
+//               Text(value, style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
+//             ],
+//           ),
+//           Text(status,
+//               style: GoogleFonts.inder(
+//                   fontSize: 15,
+//                   fontWeight: FontWeight.bold,
+//                   color: getStatusColor(status))),
+//         ],
+//       ),
+//     );
+//   }
+//
+//   Widget _buildAdviceList() {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         Text("Recommendations:",
+//             style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
+//         const SizedBox(height: 8),
+//         ...adviceList.map((advice) => Padding(
+//           padding: const EdgeInsets.only(bottom: 6),
+//           child: Row(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               const Icon(Icons.check_circle, color: Colors.green),
+//               const SizedBox(width: 8),
+//               Expanded(
+//                 child: Text(advice,
+//                     style: GoogleFonts.inder(fontSize: 14, fontWeight: FontWeight.w500)),
+//               ),
+//             ],
+//           ),
+//         ))
+//       ],
+//     );
+//   }
+// }
+//===================================================================//
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import '../../firebase_functions.dart';
 import '../../mqtt_service.dart';
 
 
@@ -366,37 +493,47 @@ class LightIntensity extends StatefulWidget {
 }
 
 class _LightIntensityPageState extends State<LightIntensity> {
-  String tempValue = '--';
-  String tempStatus = '--';
+  String lightValue = '--';
+  String lightStatus = '--';
+  String overallAdvice = '';
   List<String> adviceList = [];
 
   @override
   void initState() {
     super.initState();
+
+    MQTTService().subscribe("sensors/data");
+
     MQTTService().setOnMessage((data) async {
-      if (data['sensor'] == 'LightIntensity') {
+      try {
+        final value = data["Light"] ?? 0.0;
+        final status = data["light_status"] ?? "Unknown";
+
         setState(() {
-          tempValue = "${data['value']}°C";
-          tempStatus = data['status'];
+          lightValue = "$value LUX";
+          lightStatus = status;
         });
-        final doc = await FirebaseFirestore.instance
-            .collection("instructions")
-            .doc(tempStatus)
-            .get();
+
+        final instruction = await FirebaseFunctions.getInstructions(status);
+
         setState(() {
-          adviceList = List<String>.from(doc.data()?['messages'] ?? []);
+          adviceList = List<String>.from(instruction["messages"] ?? []);
+          overallAdvice = instruction["recommendation"] ?? '';
         });
+      } catch (e) {
+        print("❌ Error in LightIntensity: $e");
       }
     });
   }
 
   Color getStatusColor(String status) {
     switch (status.toLowerCase()) {
-      case 'too hot':
+      case '❌ critical':
+      case 'bad':
         return Colors.red;
-      case 'too low':
+      case '⚠️ warning':
         return Colors.orange;
-      case 'suitable':
+      case '✅ optimal':
       case 'good':
         return Colors.green;
       default:
@@ -404,23 +541,27 @@ class _LightIntensityPageState extends State<LightIntensity> {
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("LightIntensity", style: GoogleFonts.inder(color: Colors.black)),
+        title: Text("Light Intensity", style: GoogleFonts.inder(color: Colors.black)),
         backgroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.black),
         elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader("assets/images/Light Intensity.png", tempValue, tempStatus),
-            const SizedBox(height: 16),
-            _buildAdviceList()
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader("assets/images/Light Intensity.png", lightValue, lightStatus),
+              const SizedBox(height: 16),
+              _buildAdviceList(),
+              _buildOverallAdvice(),
+            ],
+          ),
         ),
       ),
     );
@@ -440,14 +581,16 @@ class _LightIntensityPageState extends State<LightIntensity> {
             children: [
               Image.asset(image, width: 35),
               const SizedBox(width: 10),
-              Text(value, style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(value,
+                  style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
             ],
           ),
           Text(status,
               style: GoogleFonts.inder(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: getStatusColor(status))),
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: getStatusColor(status),
+              )),
         ],
       ),
     );
@@ -457,7 +600,7 @@ class _LightIntensityPageState extends State<LightIntensity> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Recommendations:",
+        Text("Detailed Recommendations:",
             style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         ...adviceList.map((advice) => Padding(
@@ -469,7 +612,8 @@ class _LightIntensityPageState extends State<LightIntensity> {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(advice,
-                    style: GoogleFonts.inder(fontSize: 14, fontWeight: FontWeight.w500)),
+                    style: GoogleFonts.inder(
+                        fontSize: 14, fontWeight: FontWeight.w500)),
               ),
             ],
           ),
@@ -477,7 +621,37 @@ class _LightIntensityPageState extends State<LightIntensity> {
       ],
     );
   }
+
+  Widget _buildOverallAdvice() {
+    if (overallAdvice.isEmpty) return const SizedBox();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 20),
+        Text("Recommendation:",
+            style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.yellow[100],
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Text(
+            overallAdvice,
+            style: GoogleFonts.inder(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colors.black87,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }
+
+
 
 
 

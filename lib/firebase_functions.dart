@@ -8,6 +8,27 @@ import 'models/farm_model.dart';
 import 'models/user_model.dart';
 
 class FirebaseFunctions {
+
+  static Future<Map<String, dynamic>> getInstructions(String status) async {
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('instructions')
+          .doc(status)
+          .get();
+
+      if (doc.exists) {
+        return doc.data() ?? {};
+      } else {
+        return {};
+      }
+    } catch (e) {
+      print("❌ Firebase error: $e");
+      return {};
+    }
+  }
+
+
+
   static Future<void> addFarm(FarmModel farmModel) async {
     await FirebaseFirestore.instance
         .collection('Farms')

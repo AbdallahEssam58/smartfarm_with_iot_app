@@ -308,10 +308,88 @@
 //=============================================================//
 
 
-// fire_page.dart
+//========================================================//
+// import 'package:flutter/material.dart';
+// import 'package:google_fonts/google_fonts.dart';
+// import '../../mqtt_service.dart';
+//
+//
+// class FireDetection extends StatefulWidget {
+//   const FireDetection({super.key});
+//
+//   @override
+//   State<FireDetection> createState() => _FireDetectionPageState();
+// }
+//
+// class _FireDetectionPageState extends State<FireDetection> {
+//   bool fireDetected = false;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     MQTTService().setOnMessage((data) {
+//       if (data['sensor'] == 'fire' && data['status'] == 'Detected') {
+//         setState(() {
+//           fireDetected = true;
+//         });
+//       }
+//     });
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: Colors.white,
+//       appBar: AppBar(
+//         title: Text("Fire Emergency", style: GoogleFonts.inder(color: Colors.black)),
+//         backgroundColor: Colors.white,
+//         iconTheme: const IconThemeData(color: Colors.black),
+//         elevation: 0,
+//       ),
+//       body: Padding(
+//         padding: const EdgeInsets.all(16),
+//         child: fireDetected
+//             ? Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Text("🔥 Fire Detected!",
+//                 style: GoogleFonts.inder(fontSize: 18, color: Colors.red, fontWeight: FontWeight.bold)),
+//             const SizedBox(height: 16),
+//             _buildAdvice("1. Alert People", "Immediately notify everyone nearby."),
+//             _buildAdvice("2. Cut Power", "If it's electrical, turn off power before acting."),
+//             _buildAdvice("3. Use Extinguisher", "Use Class C fire extinguisher or dry sand."),
+//             _buildAdvice("4. Evacuate", "Call emergency services immediately."),
+//           ],
+//         )
+//             : Center(
+//           child: Text("✅ No Fire Detected.",
+//               style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.w500)),
+//         ),
+//       ),
+//     );
+//   }
+//
+//   Widget _buildAdvice(String title, String desc) {
+//     return Padding(
+//       padding: const EdgeInsets.only(bottom: 12),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Text(title,
+//               style: GoogleFonts.inder(fontSize: 15, color: Colors.green, fontWeight: FontWeight.w600)),
+//           const SizedBox(height: 4),
+//           Text(desc,
+//               style: GoogleFonts.inder(fontSize: 14, color: Colors.black87, fontWeight: FontWeight.w500)),
+//         ],
+//       ),
+//     );
+//   }
+// }
+//=================================================================//
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import '../../firebase_functions.dart';
 import '../../mqtt_service.dart';
 
 
@@ -319,19 +397,39 @@ class FireDetection extends StatefulWidget {
   const FireDetection({super.key});
 
   @override
-  State<FireDetection> createState() => _FireDetectionPageState();
+  State<FireDetection> createState() => _FireDetectionState();
 }
 
-class _FireDetectionPageState extends State<FireDetection> {
+class _FireDetectionState extends State<FireDetection> {
   bool fireDetected = false;
+  String fireStatus = 'No Fire';
+  String recommendation = '';
+  List<String> fireActions = [];
 
   @override
   void initState() {
     super.initState();
-    MQTTService().setOnMessage((data) {
-      if (data['sensor'] == 'fire' && data['status'] == 'Detected') {
+    MQTTService().subscribe("sensors/data");
+
+    MQTTService().setOnMessage((data) async {
+      final status = data["fire_status"] ?? "Safe";
+
+      if (status.toLowerCase() == "detected") {
         setState(() {
           fireDetected = true;
+          fireStatus = "🔥 Fire Detected!";
+        });
+
+        final instruction = await FirebaseFunctions.getInstructions("Detected");
+
+        setState(() {
+          recommendation = instruction["recommendation"] ?? '';
+          fireActions = List<String>.from(instruction["messages"] ?? []);
+        });
+      } else {
+        setState(() {
+          fireDetected = false;
+          fireStatus = "✅ No Fire Detected";
         });
       }
     });
@@ -340,54 +438,108 @@ class _FireDetectionPageState extends State<FireDetection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text("Fire Emergency", style: GoogleFonts.inder(color: Colors.black)),
         backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Colors.black),
         elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: fireDetected
-            ? Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("🔥 Fire Detected!",
-                style: GoogleFonts.inder(fontSize: 18, color: Colors.red, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 16),
-            _buildAdvice("1. Alert People", "Immediately notify everyone nearby."),
-            _buildAdvice("2. Cut Power", "If it's electrical, turn off power before acting."),
-            _buildAdvice("3. Use Extinguisher", "Use Class C fire extinguisher or dry sand."),
-            _buildAdvice("4. Evacuate", "Call emergency services immediately."),
-          ],
-        )
-            : Center(
-          child: Text("✅ No Fire Detected.",
-              style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.w500)),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildStatusBox(),
+              const SizedBox(height: 16),
+              if (fireDetected) _buildRecommendation(),
+              if (fireDetected) _buildActionSteps(),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildAdvice(String title, String desc) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildStatusBox() {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: fireDetected ? Colors.red[100] : Colors.green[100],
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
         children: [
-          Text(title,
-              style: GoogleFonts.inder(fontSize: 15, color: Colors.green, fontWeight: FontWeight.w600)),
-          const SizedBox(height: 4),
-          Text(desc,
-              style: GoogleFonts.inder(fontSize: 14, color: Colors.black87, fontWeight: FontWeight.w500)),
+          Icon(
+            fireDetected ? Icons.warning_amber : Icons.check_circle,
+            color: fireDetected ? Colors.red : Colors.green,
+            size: 28,
+          ),
+          const SizedBox(width: 10),
+          Text(
+            fireStatus,
+            style: GoogleFonts.inder(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
+          ),
         ],
       ),
     );
   }
+
+  Widget _buildRecommendation() {
+    if (recommendation.isEmpty) return const SizedBox();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Recommendation:",
+            style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.orange[100],
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Text(
+            recommendation,
+            style: GoogleFonts.inder(fontSize: 14, fontWeight: FontWeight.w500),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActionSteps() {
+    if (fireActions.isEmpty) return const SizedBox();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 20),
+        Text("Fire Safety Actions:",
+            style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        ...fireActions.map((action) => Padding(
+          padding: const EdgeInsets.only(bottom: 6),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(Icons.local_fire_department, color: Colors.red),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(action,
+                    style: GoogleFonts.inder(
+                        fontSize: 14, fontWeight: FontWeight.w500)),
+              ),
+            ],
+          ),
+        )),
+      ],
+    );
+  }
 }
-
-
 
 
 
