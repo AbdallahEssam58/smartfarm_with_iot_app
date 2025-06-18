@@ -622,7 +622,7 @@ class _HumidityPageState extends State<Humidity> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHeader(humidityValue, humidityStatus),
+              _buildHeader("assets/images/Humidity.png",humidityValue, humidityStatus),
               const SizedBox(height: 16),
               _buildAdviceList(),
               _buildOverallAdvice(),
@@ -633,7 +633,7 @@ class _HumidityPageState extends State<Humidity> {
     );
   }
 
-  Widget _buildHeader(String value, String status) {
+  Widget _buildHeader(String image, String value, String status) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -643,8 +643,14 @@ class _HumidityPageState extends State<Humidity> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(value,
-              style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
+          Row(
+            children: [
+              Image.asset(image, width: 35),
+              const SizedBox(width: 10),
+              Text(value,
+                  style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
+            ],
+          ),
           Text(status,
               style: GoogleFonts.inder(
                 fontSize: 15,
@@ -655,6 +661,7 @@ class _HumidityPageState extends State<Humidity> {
       ),
     );
   }
+
 
   Widget _buildAdviceList() {
     return Column(

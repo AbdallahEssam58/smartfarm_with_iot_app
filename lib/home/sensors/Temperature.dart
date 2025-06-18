@@ -780,7 +780,8 @@ class _TemperaturePageState extends State<Temperature> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHeader(tempValue, tempStatus),
+              _buildHeader("assets/images/Temprature.png",tempValue, tempStatus),
+
               const SizedBox(height: 16),
               _buildAdviceList(),
               _buildOverallAdvice(),
@@ -791,18 +792,24 @@ class _TemperaturePageState extends State<Temperature> {
     );
   }
 
-  Widget _buildHeader(String value, String status) {
+  Widget _buildHeader(String image, String value, String status) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFBE4),
+        color: const Color(0xFFE4F2FF),
         borderRadius: BorderRadius.circular(25),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(value,
-              style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
+          Row(
+            children: [
+              Image.asset(image, width: 35),
+              const SizedBox(width: 10),
+              Text(value,
+                  style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
+            ],
+          ),
           Text(status,
               style: GoogleFonts.inder(
                 fontSize: 15,
@@ -813,6 +820,7 @@ class _TemperaturePageState extends State<Temperature> {
       ),
     );
   }
+
 
   Widget _buildAdviceList() {
     return Column(
