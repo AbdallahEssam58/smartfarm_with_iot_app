@@ -24,7 +24,7 @@ class HomeTab extends StatelessWidget {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.green,
         title: Text(
-          "Hello ${por.userModel?.firstName}",
+          "Hello 👋 ${por.userModel?.firstName}",
           style: TextStyle(
             fontSize: 30,
             color: Colors.white,

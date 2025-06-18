@@ -19,8 +19,6 @@ void main() async {
   await mqtt.connect();
   mqtt.setOnMessage((data) {
     print("📥 Received from MQTT: $data");
-
-
   });
 
   await Firebase.initializeApp(
@@ -34,16 +32,12 @@ void main() async {
   );
 }
 
-
-
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var pro=Provider.of<MyProvider>(context);
-
+    var pro = Provider.of<MyProvider>(context);
 
     if (pro.firebaseUser != null && pro.userModel == null) {
       pro.initUser();
@@ -63,21 +57,14 @@ class MyApp extends StatelessWidget {
             HomeScreen.routeName: (context) => HomeScreen(),
             SetUpFarmScreen.routeName: (context) => SetUpFarmScreen(),
           },
-          initialRoute: pro.firebaseUser!=null?HomeScreen.routeName: SplashView.routeName,
+          initialRoute: pro.firebaseUser != null
+              ? HomeScreen.routeName
+              : SplashView.routeName,
         );
       },
     );
   }
 }
-
-
-
-
-
-
-
-
-
 
 // import 'package:flutter/material.dart';
 // import 'package:smartfarm_with_iot_app/home/home_screen.dart';
@@ -107,4 +94,3 @@ class MyApp extends StatelessWidget {
 //     );
 //   }
 // }
-
