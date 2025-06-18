@@ -48,6 +48,7 @@ class MyApp extends StatelessWidget {
     if (pro.firebaseUser != null && pro.userModel == null) {
       pro.initUser();
     }
+    //
     return ScreenUtilInit(
       designSize: const Size(400, 500),
       minTextAdapt: true,
