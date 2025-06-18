@@ -254,8 +254,8 @@ class Statcard extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 10.h),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
+                   topLeft: Radius.circular(10),
+                   topRight: Radius.circular(10),
                 ),
                 color: Colors.green,
               ),
