@@ -108,7 +108,7 @@ class HomeTab extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 20.h),
+              // SizedBox(height: 5.h),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -120,7 +120,7 @@ class HomeTab extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 12.h),
+              SizedBox(height: 15.h),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -135,8 +135,10 @@ class HomeTab extends StatelessWidget {
                     Statcard(
                         label: "Humidity",
                         imagePath: "assets/images/Humidity.png",
-                        onTap: () => Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => Humidity()))),
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Humidity()))),
                     Statcard(
                         label: "Fire Detection",
                         imagePath: "assets/images/Fire Detection.png",
@@ -172,41 +174,40 @@ class Fildcard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Container(
-            margin: EdgeInsets.only(right: 14, left: 2),
-            height: 100,
-            width: 160,
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 8.w),
+      width: 160.w,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 100.h,
+            width: double.infinity,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16.r),
               image: DecorationImage(
                 image: AssetImage("assets/images/Lettuce.png"),
                 fit: BoxFit.cover,
               ),
             ),
           ),
-        ),
-        SizedBox(
-          height: 2,
-        ),
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
+          SizedBox(height: 4.h),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        Text(
-          acres,
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey[600],
+          Text(
+            acres,
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: Colors.grey[600],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -216,25 +217,26 @@ class Statcard extends StatelessWidget {
   final String label;
   final VoidCallback? onTap;
 
-  const Statcard(
-      {super.key,
-      required this.imagePath,
-      required this.label,
-      required this.onTap});
+  const Statcard({
+    super.key,
+    required this.imagePath,
+    required this.label,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 110,
-        width: 90,
-        margin: EdgeInsets.only(right: 10, left: 10),
+        height: 110.h,
+        width: 90.w,
+        margin: EdgeInsets.symmetric(horizontal: 8.w),
         decoration: BoxDecoration(
           color: Color(0xFFF4F4F4),
           borderRadius: BorderRadius.only(
-            topRight: Radius.circular(10),
-            topLeft: Radius.circular(10),
+            topRight: Radius.circular(10.r),
+            topLeft: Radius.circular(10.r),
           ),
         ),
         child: Column(
@@ -242,34 +244,143 @@ class Statcard extends StatelessWidget {
           children: [
             Image.asset(
               imagePath,
-              width:90,
-              height: 75,
+              width: 85.w,
+              height: 80.h,
               fit: BoxFit.contain,
             ),
             Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: 8),
+              padding: EdgeInsets.symmetric(vertical: 10.h),
               decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
                 color: Colors.green,
               ),
               child: Text(
                 label,
                 style: GoogleFonts.aBeeZee(
-                  fontSize: 11,
+                  fontSize: 11.sp,
                   fontWeight: FontWeight.w400,
                   color: Colors.white,
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
-            //  Spacer(flex: 3,),
           ],
         ),
       ),
     );
   }
 }
-
+//==============================================================================//
+// class Fildcard extends StatelessWidget {
+//   final String title;
+//   final String acres;
+//
+//   const Fildcard({super.key, required this.title, required this.acres});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         Expanded(
+//           child: Container(
+//             margin: EdgeInsets.only(right: 14, left: 2),
+//             height: 100,
+//             width: 160,
+//             decoration: BoxDecoration(
+//               borderRadius: BorderRadius.circular(16),
+//               image: DecorationImage(
+//                 image: AssetImage("assets/images/Lettuce.png"),
+//                 fit: BoxFit.cover,
+//               ),
+//             ),
+//           ),
+//         ),
+//         SizedBox(
+//           height: 2,
+//         ),
+//         Text(
+//           title,
+//           style: TextStyle(
+//             fontSize: 16,
+//             fontWeight: FontWeight.bold,
+//           ),
+//         ),
+//         Text(
+//           acres,
+//           style: TextStyle(
+//             fontSize: 14,
+//             color: Colors.grey[600],
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }
+//
+// class Statcard extends StatelessWidget {
+//   final String imagePath;
+//   final String label;
+//   final VoidCallback? onTap;
+//
+//   const Statcard(
+//       {super.key,
+//       required this.imagePath,
+//       required this.label,
+//       required this.onTap});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return GestureDetector(
+//       onTap: onTap,
+//       child: Container(
+//         height: 110,
+//         width: 90,
+//         margin: EdgeInsets.only(right: 10, left: 10),
+//         decoration: BoxDecoration(
+//           color: Color(0xFFF4F4F4),
+//           borderRadius: BorderRadius.only(
+//             topRight: Radius.circular(10),
+//             topLeft: Radius.circular(10),
+//           ),
+//         ),
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Image.asset(
+//               imagePath,
+//               width:90,
+//               height: 75,
+//               fit: BoxFit.contain,
+//             ),
+//             Container(
+//               width: double.infinity,
+//               padding: EdgeInsets.symmetric(vertical: 8),
+//               decoration: BoxDecoration(
+//                 color: Colors.green,
+//               ),
+//               child: Text(
+//                 label,
+//                 style: GoogleFonts.aBeeZee(
+//                   fontSize: 11,
+//                   fontWeight: FontWeight.w400,
+//                   color: Colors.white,
+//                 ),
+//                 textAlign: TextAlign.center,
+//               ),
+//             ),
+//             //  Spacer(flex: 3,),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+//==============================================================================//
 // import 'package:flutter/material.dart';
 // import 'package:google_fonts/google_fonts.dart';
 // import 'package:smartfarm_with_iot_app/home/home_screen.dart';
