@@ -29,14 +29,14 @@ class CreateAnAccountScreen extends StatelessWidget {
                 ),
               ),
               Positioned(
-                top: 150.h,
+                top: 100.h,
                 left: 0,
                 right:0,
                 child: Center(
                   child: Image.asset(
                     "assets/images/Logo (2).png",
-                    width: 150.w,
-                    height: 150.h,
+                    width: 160.w,
+                    height: 160.h,
                   ),
                 ),
               ),
