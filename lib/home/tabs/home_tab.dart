@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,8 +6,8 @@ import 'package:smartfarm_with_iot_app/home/sensors/Fire_Detection.dart';
 import 'package:smartfarm_with_iot_app/home/sensors/Humidity.dart';
 import 'package:smartfarm_with_iot_app/home/sensors/Light_Intensity.dart';
 import 'package:smartfarm_with_iot_app/home/sensors/Temperature.dart';
+import 'package:smartfarm_with_iot_app/home/settings.dart';
 import 'package:smartfarm_with_iot_app/home/tabs/myfileds_tab.dart';
-import 'package:smartfarm_with_iot_app/onboarding.dart';
 import 'package:smartfarm_with_iot_app/provider/my_provider.dart';
 
 class HomeTab extends StatelessWidget {
@@ -33,11 +32,13 @@ class HomeTab extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              FirebaseAuth.instance.signOut();
-              Navigator.pushNamed(context, OnboardingScreen.routeName);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Settings()),
+              );
             },
             icon: Icon(
-              Icons.logout,
+              Icons.settings,
               color: Colors.white,
             ),
           ),
