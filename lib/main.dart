@@ -7,14 +7,12 @@ import 'package:smartfarm_with_iot_app/provider/my_provider.dart';
 import 'package:smartfarm_with_iot_app/setup_farm.dart';
 import 'package:smartfarm_with_iot_app/splash_view.dart';
 import 'package:smartfarm_with_iot_app/onboarding.dart';
-
 import 'firebase_options.dart';
 import 'home/tabs/home_tab.dart';
 import 'mqtt_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   final mqtt = MQTTService();
   await mqtt.connect();
   mqtt.setOnMessage((data) {

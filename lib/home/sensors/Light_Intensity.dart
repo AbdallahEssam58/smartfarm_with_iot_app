@@ -479,62 +479,533 @@
 //   }
 // }
 //===================================================================//
+// import 'package:flutter/material.dart';
+// import 'package:google_fonts/google_fonts.dart';
+// import '../../firebase_functions.dart';
+// import '../../mqtt_service.dart';
+//
+//
+// class LightIntensity extends StatefulWidget {
+//   const LightIntensity({super.key});
+//
+//   @override
+//   State<LightIntensity> createState() => _LightIntensityPageState();
+// }
+//
+// class _LightIntensityPageState extends State<LightIntensity> {
+//   String lightValue = '--';
+//   String lightStatus = '--';
+//   String overallAdvice = '';
+//   List<String> adviceList = [];
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//
+//     MQTTService().subscribe("sensors/data");
+//
+//     MQTTService().setOnMessage((data) async {
+//       try {
+//         final value = data["Light"] ?? 0.0;
+//         final status = data["light_status"] ?? "Unknown";
+//
+//         setState(() {
+//           lightValue = "$value LUX";
+//           lightStatus = status;
+//         });
+//
+//         final instruction = await FirebaseFunctions.getInstructions(status);
+//
+//         setState(() {
+//           adviceList = List<String>.from(instruction["messages"] ?? []);
+//           overallAdvice = instruction["recommendation"] ?? '';
+//         });
+//       } catch (e) {
+//         print("❌ Error in LightIntensity: $e");
+//       }
+//     });
+//   }
+//
+//   Color getStatusColor(String status) {
+//     switch (status.toLowerCase()) {
+//       case '❌ critical':
+//       case 'bad':
+//         return Colors.red;
+//       case '⚠️ warning':
+//         return Colors.orange;
+//       case '✅ optimal':
+//       case 'good':
+//         return Colors.green;
+//       default:
+//         return Colors.grey;
+//     }
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text("Light Intensity", style: GoogleFonts.inder(color: Colors.black)),
+//         backgroundColor: Colors.white,
+//         iconTheme: const IconThemeData(color: Colors.black),
+//         elevation: 0,
+//       ),
+//       body: Padding(
+//         padding: const EdgeInsets.all(16),
+//         child: SingleChildScrollView(
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               _buildHeader("assets/images/Light Intensity.png", lightValue, lightStatus),
+//               const SizedBox(height: 16),
+//               _buildAdviceList(),
+//               _buildOverallAdvice(),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+//
+//   Widget _buildHeader(String image, String value, String status) {
+//     return Container(
+//       padding: const EdgeInsets.all(12),
+//       decoration: BoxDecoration(
+//         color: const Color(0xFFC0F0C2),
+//         borderRadius: BorderRadius.circular(25),
+//       ),
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//         children: [
+//           Row(
+//             children: [
+//               Image.asset(image, width: 35),
+//               const SizedBox(width: 10),
+//               Text(value,
+//                   style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
+//             ],
+//           ),
+//           Text(status,
+//               style: GoogleFonts.inder(
+//                 fontSize: 15,
+//                 fontWeight: FontWeight.bold,
+//                 color: getStatusColor(status),
+//               )),
+//         ],
+//       ),
+//     );
+//   }
+//
+//   Widget _buildAdviceList() {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         Text("Detailed Recommendations:",
+//             style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
+//         const SizedBox(height: 8),
+//         ...adviceList.map((advice) => Padding(
+//           padding: const EdgeInsets.only(bottom: 6),
+//           child: Row(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               const Icon(Icons.check_circle, color: Colors.green),
+//               const SizedBox(width: 8),
+//               Expanded(
+//                 child: Text(advice,
+//                     style: GoogleFonts.inder(
+//                         fontSize: 14, fontWeight: FontWeight.w500)),
+//               ),
+//             ],
+//           ),
+//         ))
+//       ],
+//     );
+//   }
+//
+//   Widget _buildOverallAdvice() {
+//     if (overallAdvice.isEmpty) return const SizedBox();
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         const SizedBox(height: 20),
+//         Text("Recommendation:",
+//             style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
+//         const SizedBox(height: 8),
+//         Container(
+//           padding: const EdgeInsets.all(12),
+//           decoration: BoxDecoration(
+//             color: Colors.yellow[100],
+//             borderRadius: BorderRadius.circular(12),
+//           ),
+//           child: Text(
+//             overallAdvice,
+//             style: GoogleFonts.inder(
+//               fontSize: 14,
+//               fontWeight: FontWeight.w500,
+//               color: Colors.black87,
+//             ),
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }
+//======================================================================//
+
+// import 'package:flutter/material.dart';
+// import 'package:google_fonts/google_fonts.dart';
+// import '../../mqtt_service.dart';
+//
+// class LightIntensity extends StatefulWidget {
+//   const LightIntensity({super.key});
+//
+//   @override
+//   State<LightIntensity> createState() => _LightIntensityState();
+// }
+//
+// class _LightIntensityState extends State<LightIntensity> {
+//   String lightValue = '--';
+//   String lightStatus = '--';
+//   List<String> adviceList = [];
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     MQTTService().setOnMessage((data) {
+//       if (data.containsKey('light')) {
+//         final value = data['light'];
+//         setState(() {
+//           lightValue = "${value.toStringAsFixed(0)} LUX";
+//
+//           if (value > 60000) {
+//             lightStatus = 'Too High';
+//             adviceList = [
+//               'Use shading nets to reduce light intensity.',
+//               'Avoid exposing cabbage to direct sunlight during noon.',
+//               'Move plants to partial shade area if possible.'
+//             ];
+//           } else if (value < 15000) {
+//             lightStatus = 'Too Low';
+//             adviceList = [
+//               'Ensure the cabbage is getting at least 6-8 hours of light.',
+//               'Use artificial grow lights in greenhouses.',
+//               'Reflect sunlight using white surfaces.'
+//             ];
+//           } else {
+//             lightStatus = 'Good';
+//             adviceList = [
+//               'Keep current lighting conditions.',
+//               'Ensure plants are spaced to avoid shadow.',
+//             ];
+//           }
+//         });
+//       }
+//     });
+//
+//     MQTTService().connect();
+//   }
+//
+//   Color getStatusColor(String status) {
+//     switch (status.toLowerCase()) {
+//       case 'too high':
+//         return Colors.red;
+//       case 'too low':
+//         return Colors.orange;
+//       case 'good':
+//         return Colors.green;
+//       default:
+//         return Colors.grey;
+//     }
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text("Light Intensity", style: GoogleFonts.inder(color: Colors.black)),
+//         backgroundColor: Colors.white,
+//         iconTheme: const IconThemeData(color: Colors.black),
+//         elevation: 0,
+//       ),
+//       body: Padding(
+//         padding: const EdgeInsets.all(16),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             _buildHeader("assets/images/sun.png", lightValue, lightStatus),
+//             const SizedBox(height: 16),
+//             _buildAdviceList()
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+//
+//   Widget _buildHeader(String image, String value, String status) {
+//     return Container(
+//       padding: const EdgeInsets.all(12),
+//       decoration: BoxDecoration(
+//         color: const Color(0xFFC0F0C2),
+//         borderRadius: BorderRadius.circular(25),
+//       ),
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//         children: [
+//           Row(
+//             children: [
+//               Image.asset(image, width: 35),
+//               const SizedBox(width: 10),
+//               Text(value, style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
+//             ],
+//           ),
+//           Text(status,
+//               style: GoogleFonts.inder(
+//                   fontSize: 15, fontWeight: FontWeight.bold, color: getStatusColor(status))),
+//         ],
+//       ),
+//     );
+//   }
+//
+//   Widget _buildAdviceList() {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         Text("Recommendations:",
+//             style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
+//         const SizedBox(height: 8),
+//         ...adviceList.map((advice) => Padding(
+//           padding: const EdgeInsets.only(bottom: 6),
+//           child: Row(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               const Icon(Icons.check_circle, color: Colors.green),
+//               const SizedBox(width: 8),
+//               Expanded(
+//                 child: Text(advice,
+//                     style: GoogleFonts.inder(fontSize: 14, fontWeight: FontWeight.w500)),
+//               ),
+//             ],
+//           ),
+//         ))
+//       ],
+//     );
+//   }
+// }
+//========================================================================//
+// import 'package:flutter/material.dart';
+// import 'package:google_fonts/google_fonts.dart';
+// import '../../mqtt_service.dart';
+//
+// class LightIntensity extends StatefulWidget {
+//   const LightIntensity({super.key});
+//
+//   @override
+//   State<LightIntensity> createState() => _LightIntensityState();
+// }
+//
+// class _LightIntensityState extends State<LightIntensity> {
+//   String tempValue = '--';
+//   String tempStatus = '--';
+//   List<String> adviceList = [];
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//
+//     // الاشتراك في التوبيك
+//     MQTTService().subscribe('sensors/data');
+//
+//     MQTTService().setOnMessage((data) {
+//       final value = data['Temperature'];
+//       if (value != null && value is num) {
+//         setState(() {
+//           tempValue = "${value.toStringAsFixed(1)}°C";
+//
+//           if (value > 35) {
+//             tempStatus = 'Too Hot';
+//             adviceList = [
+//               'Use shade nets or row covers to protect plants.',
+//               'Increase irrigation in early morning or late evening.',
+//               'Use mulching to retain soil moisture.',
+//               'Spray water mist to cool air and leaves.'
+//             ];
+//           } else if (value < 10) {
+//             tempStatus = 'Too Low';
+//             adviceList = [
+//               'Cover crops with plastic tunnels or greenhouses.',
+//               'Use reflective surfaces to direct sunlight.',
+//               'Use heaters in greenhouse if needed.'
+//             ];
+//           } else {
+//             tempStatus = 'Suitable';
+//             adviceList = [
+//               'Maintain current temperature and watering schedule.',
+//               'Ensure proper ventilation in the greenhouse.',
+//             ];
+//           }
+//         });
+//       }
+//     });
+//
+//     MQTTService().connect();
+//   }
+//
+//   Color getStatusColor(String status) {
+//     switch (status.toLowerCase()) {
+//       case 'too hot':
+//         return Colors.red;
+//       case 'too low':
+//         return Colors.orange;
+//       case 'suitable':
+//         return Colors.green;
+//       default:
+//         return Colors.grey;
+//     }
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text("Temperature", style: GoogleFonts.inder(color: Colors.black)),
+//         backgroundColor: Colors.white,
+//         iconTheme: const IconThemeData(color: Colors.black),
+//         elevation: 0,
+//       ),
+//       body: Padding(
+//         padding: const EdgeInsets.all(16),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             _buildHeader("assets/images/Temprature.png", tempValue, tempStatus),
+//             const SizedBox(height: 16),
+//             _buildAdviceList(),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+//
+//   Widget _buildHeader(String image, String value, String status) {
+//     return Container(
+//       padding: const EdgeInsets.all(12),
+//       decoration: BoxDecoration(
+//         color: const Color(0xFFFFFBE4),
+//         borderRadius: BorderRadius.circular(25),
+//       ),
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//         children: [
+//           Row(
+//             children: [
+//               Image.asset(image, width: 35),
+//               const SizedBox(width: 10),
+//               Text(value, style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
+//             ],
+//           ),
+//           Text(status,
+//               style: GoogleFonts.inder(
+//                 fontSize: 15,
+//                 fontWeight: FontWeight.bold,
+//                 color: getStatusColor(status),
+//               )),
+//         ],
+//       ),
+//     );
+//   }
+//
+//   Widget _buildAdviceList() {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         Text("Recommendations:",
+//             style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
+//         const SizedBox(height: 8),
+//         ...adviceList.map((advice) => Padding(
+//           padding: const EdgeInsets.only(bottom: 6),
+//           child: Row(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               const Icon(Icons.check_circle, color: Colors.green),
+//               const SizedBox(width: 8),
+//               Expanded(
+//                 child: Text(advice,
+//                     style: GoogleFonts.inder(
+//                         fontSize: 14, fontWeight: FontWeight.w500)),
+//               ),
+//             ],
+//           ),
+//         )),
+//       ],
+//     );
+//   }
+// }
+//===================================================================//
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../firebase_functions.dart';
 import '../../mqtt_service.dart';
-
 
 class LightIntensity extends StatefulWidget {
   const LightIntensity({super.key});
 
   @override
-  State<LightIntensity> createState() => _LightIntensityPageState();
+  State<LightIntensity> createState() => _LightIntensityState();
 }
 
-class _LightIntensityPageState extends State<LightIntensity> {
+class _LightIntensityState extends State<LightIntensity> {
   String lightValue = '--';
   String lightStatus = '--';
-  String overallAdvice = '';
   List<String> adviceList = [];
 
   @override
   void initState() {
     super.initState();
 
-    MQTTService().subscribe("sensors/data");
+    // الاشتراك في التوبيك
+    MQTTService().subscribe('sensors/data');
 
-    MQTTService().setOnMessage((data) async {
-      try {
-        final value = data["Light"] ?? 0.0;
-        final status = data["light_status"] ?? "Unknown";
-
+    MQTTService().setOnMessage((data) {
+      final value = data['Light'];
+      if (value != null && value is num) {
         setState(() {
-          lightValue = "$value LUX";
-          lightStatus = status;
-        });
+          lightValue = "${value.toStringAsFixed(1)} Lux";
 
-        final instruction = await FirebaseFunctions.getInstructions(status);
-
-        setState(() {
-          adviceList = List<String>.from(instruction["messages"] ?? []);
-          overallAdvice = instruction["recommendation"] ?? '';
+          if (value > 800) {
+            lightStatus = 'Too Bright';
+            adviceList = [
+              'Use shading nets to reduce light exposure.',
+              'Avoid direct midday sunlight on sensitive crops.',
+              'Irrigate more frequently to prevent wilting.',
+              'Protect young seedlings from harsh light.'
+            ];
+          } else if (value < 300) {
+            lightStatus = 'Too Dim';
+            adviceList = [
+              'Move plants to a brighter area.',
+              'Use grow lights to supplement natural light.',
+              'Trim overhead shade or obstructions.'
+            ];
+          } else {
+            lightStatus = 'Optimal';
+            adviceList = [
+              'Maintain current lighting conditions.',
+              'Rotate plants regularly for even growth.',
+            ];
+          }
         });
-      } catch (e) {
-        print("❌ Error in LightIntensity: $e");
       }
     });
+
+    MQTTService().connect();
   }
 
   Color getStatusColor(String status) {
     switch (status.toLowerCase()) {
-      case '❌ critical':
-      case 'bad':
-        return Colors.red;
-      case '⚠️ warning':
+      case 'too bright':
         return Colors.orange;
-      case '✅ optimal':
-      case 'good':
+      case 'too dim':
+        return Colors.red;
+      case 'optimal':
         return Colors.green;
       default:
         return Colors.grey;
@@ -552,16 +1023,13 @@ class _LightIntensityPageState extends State<LightIntensity> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader("assets/images/Light Intensity.png", lightValue, lightStatus),
-              const SizedBox(height: 16),
-              _buildAdviceList(),
-              _buildOverallAdvice(),
-            ],
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader("assets/images/Light Intensity.png", lightValue, lightStatus),
+            const SizedBox(height: 16),
+            _buildAdviceList(),
+          ],
         ),
       ),
     );
@@ -571,7 +1039,7 @@ class _LightIntensityPageState extends State<LightIntensity> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFC0F0C2),
+        color: const Color(0xFFFFFBE4),
         borderRadius: BorderRadius.circular(25),
       ),
       child: Row(
@@ -581,8 +1049,7 @@ class _LightIntensityPageState extends State<LightIntensity> {
             children: [
               Image.asset(image, width: 35),
               const SizedBox(width: 10),
-              Text(value,
-                  style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(value, style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
             ],
           ),
           Text(status,
@@ -600,7 +1067,7 @@ class _LightIntensityPageState extends State<LightIntensity> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Detailed Recommendations:",
+        Text("Recommendations:",
             style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         ...adviceList.map((advice) => Padding(
@@ -617,42 +1084,11 @@ class _LightIntensityPageState extends State<LightIntensity> {
               ),
             ],
           ),
-        ))
-      ],
-    );
-  }
-
-  Widget _buildOverallAdvice() {
-    if (overallAdvice.isEmpty) return const SizedBox();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 20),
-        Text("Recommendation:",
-            style: GoogleFonts.inder(fontSize: 16, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.yellow[100],
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Text(
-            overallAdvice,
-            style: GoogleFonts.inder(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Colors.black87,
-            ),
-          ),
-        ),
+        )),
       ],
     );
   }
 }
-
-
-
 
 
 

@@ -180,6 +180,7 @@ class MQTTService {
     try {
       await client.connect();
       print('✅ MQTT Connected!');
+      client.subscribe('sensors/data', MqttQos.atLeastOnce);
       client.updates!.listen(_onMessage);
     } catch (e) {
       print('❌ MQTT Connection Failed: $e');
